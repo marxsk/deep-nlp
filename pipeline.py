@@ -68,5 +68,5 @@ if __name__ == "__main__":
     logging.basicConfig(level=os.environ.get("LOGLEVEL", LOGLEVEL_DEFAULT))
 
     with open(sys.argv[1], 'r', encoding='utf-8') as fh:
-        # @note: read only the first line
-        parse_document(fh.readline())
+        for line in fh.readlines():
+            parse_document(line)
