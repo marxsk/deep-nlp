@@ -12,6 +12,8 @@ from nltk import sent_tokenize, word_tokenize
 MAJKA_WLT_PATH = "majka/majka.w-lt"
 LOGLEVEL_DEFAULT = "DEBUG"
 
+BLOCKED_LEMMA = ["dobřit"]
+
 MORPH = Majka(MAJKA_WLT_PATH)
 LOGGER = logging.getLogger('deep-nlp-pipeline')
 
@@ -27,6 +29,15 @@ def local_morph(word):
         ',': [{'lemma': ',', 'tags': {'pos': 'interpunction'}}]
     }
     return known_words[word] if word in known_words else []
+
+
+def local_blocklist(analyses):
+    """ Remove analyses that we believe are wrong because those lemmas are never used """
+    result = []
+    for a in analyses:
+        if not a['lemma'] in BLOCKED_LEMMA:
+            result.append(a)
+    return result
 
 
 def parse_document(text):
@@ -48,6 +59,7 @@ def parse_document(text):
                     if candidate['tags'] == {}:
                         LOGGER.debug(
                             'Token "%s" was recognized but it has no tags at all', word)
+            res = local_blocklist(res)
             print(res)
         print("---")
 
