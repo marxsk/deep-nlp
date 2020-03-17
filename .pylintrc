@@ -1,0 +1,3 @@
+[MASTER]
+extension-pkg-whitelist=majka
+disable=wrong-import-order
