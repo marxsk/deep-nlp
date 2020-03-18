@@ -14,6 +14,7 @@ MAJKA_WLT_PATH = "majka/majka.w-lt"
 LOGLEVEL_DEFAULT = "DEBUG"
 
 BLOCKED_LEMMA = ["dobřit"]
+BLOCKED_K1 = ["malá"]
 
 MORPH = Majka(MAJKA_WLT_PATH)
 LOGGER = logging.getLogger('deep-nlp-pipeline')
@@ -45,9 +46,12 @@ def local_morph(word):
 def local_blocklist(analyses):
     """ Remove analyses that we believe are wrong because those lemmas are never used """
     result = []
-    for a in analyses:
-        if not a['lemma'] in BLOCKED_LEMMA:
-            result.append(a)
+    for analyse in analyses:
+        if analyse['lemma'] in BLOCKED_LEMMA:
+            continue
+        if analyse['lemma'] in BLOCKED_K1 and analyse.get('tags', {}).get('pos', '') == 'substantive':
+            continue
+        result.append(analyse)
     return result
 
 
