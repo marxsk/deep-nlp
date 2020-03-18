@@ -116,7 +116,7 @@ def parse_document(text):
                     contain_verb = True
 
             tokens.append(res)
-        if not contain_verb and valid_sentence:
+        if not contain_verb and valid_sentence and tokens:
             new_sentence = []
             for token in tokens:
                 token_analysis = []
