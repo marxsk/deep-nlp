@@ -90,6 +90,7 @@ def parse_document(text):
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
         contain_verb = False
+        valid_sentence = True
         tokens = []
 
         sentence_without_emoticons = RE_EMOTICONS.sub('', sentence)
@@ -98,11 +99,13 @@ def parse_document(text):
             if res == []:
                 res = local_morph(word)
                 if res == []:
+                    valid_sentence = False
                     LOGGER.debug('Unknown token detected "%s"', word)
 
             if res:
                 for candidate in res:
                     if candidate['tags'] == {}:
+                        valid_sentence = False
                         LOGGER.debug(
                             'Token "%s" was recognized but it has no tags at all', word)
             res = local_blocklist(res)
@@ -113,7 +116,7 @@ def parse_document(text):
                     contain_verb = True
 
             tokens.append(res)
-        if not contain_verb:
+        if not contain_verb and valid_sentence:
             new_sentence = []
             for token in tokens:
                 token_analysis = []
