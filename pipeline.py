@@ -89,6 +89,9 @@ def parse_document(text):
     """
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
+        contain_verb = False
+        tokens = []
+
         sentence_without_emoticons = RE_EMOTICONS.sub('', sentence)
         for word in word_tokenize(sentence_without_emoticons):
             res = MORPH.find(word)
@@ -103,8 +106,24 @@ def parse_document(text):
                         LOGGER.debug(
                             'Token "%s" was recognized but it has no tags at all', word)
             res = local_blocklist(res)
-            print(res)
-        print("---")
+            for analyse in res:
+                analyse['semtype'] = add_semtypes_for_lemma(analyse['lemma'])
+                # @note: ignore all sentences with verb
+                if analyse.get('tags', {}).get('pos', '') == 'verb':
+                    contain_verb = True
+
+            tokens.append(res)
+        if not contain_verb:
+            new_sentence = []
+            for token in tokens:
+                token_analysis = []
+                for analysis in token:
+                    base_form = analysis['semtype'] if analysis['semtype'] else analysis.get(
+                        'lemma')
+                    token_analysis.append(base_form)
+                new_sentence.append(token_analysis)
+            print(new_sentence)
+            print("-----")
 
 
 if __name__ == "__main__":
