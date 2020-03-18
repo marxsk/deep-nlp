@@ -40,6 +40,8 @@ RE_EMOTICONS = re.compile(u'['
                           u'\u2600-\u26FF\u2700-\u27BF]+',
                           re.UNICODE)
 
+ALLOWED_TERMINALS = ["a", ","]
+
 
 def add_semtypes_for_lemma(lemma):
     """ Return string representation of list of all semantic types for given lemma """
@@ -52,6 +54,16 @@ def add_semtypes_for_lemma(lemma):
     if lemma in TYPES_APP:
         all_possible_types.append("#app")
     return ":".join(all_possible_types)
+
+
+def normalize_sem_token(token):
+    """ Create a normalized token/semtypes used for CFG """
+    if token.startswith('#'):
+        return token
+    elif token in ALLOWED_TERMINALS:
+        return token
+    else:
+        return "#unknown"
 
 
 def local_morph(word):
@@ -129,8 +141,15 @@ def parse_document(text):
             # remove trailing punctuation
             if new_sentence[-1] in [["."], ["!"]]:
                 new_sentence.pop()
+
+            cfg_sentence = []
+            for token_analysis in new_sentence:
+                cfg_sentence.append(list(set([normalize_sem_token(token)
+                                              for token in token_analysis])))
+
             print(sentence)
             print(new_sentence)
+            print(cfg_sentence)
             print("-----")
 
 
