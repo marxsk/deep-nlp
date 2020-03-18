@@ -19,12 +19,39 @@ BLOCKED_K1 = ["malá"]
 MORPH = Majka(MAJKA_WLT_PATH)
 LOGGER = logging.getLogger('deep-nlp-pipeline')
 
+TYPES_MEASURE = ["pravděpodobně", "velice", "vždy", "dobře", "top", "naprostý", "perfektní",
+                 "hezky", "spousta", "super", "výborný", "vymakaný", "samý",
+                 "velmi", "všechno", "lehce", "fakt", "ideální", "vše", "maximálně", "dobrý",
+                 "nadměrný", "nejlepší", "skvělý", "krásně", "pořádný",
+                 "velký", "výrazný", "dokonale", "celkem", "ok", "podstatný", "kladně",
+                 "neustále", "nový", "ohromně", "veškerý"]
+
+TYPES_QUALITY = ["přehledný", "snadný", "intuitivní", "jasný", "rychlý", "funkční", "ovladatelný",
+                 "jednoduchý", "příjemný", "pěkný", "moderní", "povedený", "spolehlivý", "logický",
+                 "pohodlný", "chytrý", "komfortní", "šikovný", "pochopitelný", "zdařilý", "čistý",
+                 "svižný", "zabezpečený", "praktický", "užitečný", "optimalizovaný"]
+
+TYPES_APP = ["aplikace", "web", "tlačítko", "bankovnictví", "banka", "app", "apka", "transakce",
+             "touchID", "faceID", "graf", "platba", "autorizace"]
+
 RE_EMOTICONS = re.compile(u'['
                           u'\U0001F300-\U0001F64F'
                           u'\U0001F680-\U0001F6FF'
                           u'\u2600-\u26FF\u2700-\u27BF]+',
                           re.UNICODE)
 
+
+def add_semtypes_for_lemma(lemma):
+    """ Return list of all semantic types for given lemma """
+    # @todo: is POS required for correct semtype(?)
+    all_possible_types = []
+    if lemma in TYPES_MEASURE:
+        all_possible_types.append("#measure")
+    if lemma in TYPES_QUALITY:
+        all_possible_types.append("#quality")
+    if lemma in TYPES_APP:
+        all_possible_types.append("#app")
+    return all_possible_types
 
 
 def local_morph(word):
