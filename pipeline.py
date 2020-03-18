@@ -8,6 +8,7 @@ import os
 import re
 import sys
 
+from lark import Lark
 from majka import Majka
 from nltk import sent_tokenize, word_tokenize
 
@@ -42,6 +43,37 @@ RE_EMOTICONS = re.compile(u'['
                           re.UNICODE)
 
 ALLOWED_TERMINALS = ["a", ","]
+
+GRAMMAR = """
+    sentence: t_app
+
+    t_app: (t_quality APP) | (t_quality)
+
+    t_quality: (QUALITY) | (t_measure QUALITY) | (t_measure) | (t_quality "," t_quality) | (t_quality "a" t_quality)
+
+    t_measure: MEASURE | MEASURE MEASURE
+
+    MEASURE: "#measure"
+    APP: "#app"
+    QUALITY: "#quality"
+
+    %ignore " "
+"""
+PARSER = Lark(GRAMMAR, parser='earley', start='sentence',
+              debug=True, ambiguity='explicit')
+
+
+def run_earley_parser(sentence):
+    if '#unknown' in sentence:
+        # Unknown token cannot be resolved into valid tree
+        return None
+
+    try:
+        parse_tree = PARSER.parse(" ".join(sentence))
+        print(sentence)
+        print(parse_tree.pretty())
+    except:
+        LOGGER.info("Unable to create a tree for <%s>", (" ".join(sentence)))
 
 
 def add_semtypes_for_lemma(lemma):
@@ -148,15 +180,15 @@ def parse_document(text):
                 cfg_sentence.append(list(set([normalize_sem_token(token)
                                               for token in token_analysis])))
 
-            print(sentence)
+#            print(sentence)
 #            print(new_sentence)
 #            print(cfg_sentence)
 
             # create all combinations that we have to parse
             for c in itertools.product(*cfg_sentence):
-                print(c)
+                run_earley_parser(c)
 
-            print("----sentence----")
+#            print("----sentence----")
 
 
 if __name__ == "__main__":
