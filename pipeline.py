@@ -42,7 +42,7 @@ RE_EMOTICONS = re.compile(u'['
 
 
 def add_semtypes_for_lemma(lemma):
-    """ Return list of all semantic types for given lemma """
+    """ Return string representation of list of all semantic types for given lemma """
     # @todo: is POS required for correct semtype(?)
     all_possible_types = []
     if lemma in TYPES_MEASURE:
@@ -51,7 +51,7 @@ def add_semtypes_for_lemma(lemma):
         all_possible_types.append("#quality")
     if lemma in TYPES_APP:
         all_possible_types.append("#app")
-    return all_possible_types
+    return ":".join(all_possible_types)
 
 
 def local_morph(word):
@@ -121,7 +121,8 @@ def parse_document(text):
                     base_form = analysis['semtype'] if analysis['semtype'] else analysis.get(
                         'lemma')
                     token_analysis.append(base_form)
-                new_sentence.append(token_analysis)
+                new_sentence.append(list(set(token_analysis)))
+
             print(new_sentence)
             print("-----")
 
