@@ -186,7 +186,8 @@ def parse_document(text):
 
             # create all combinations that we have to parse
             for c in itertools.product(*cfg_sentence):
-                run_earley_parser(c)
+                if c:
+                    run_earley_parser(c)
 
 #            print("----sentence----")
 
