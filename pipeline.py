@@ -11,7 +11,7 @@ from majka import Majka
 from nltk import sent_tokenize, word_tokenize
 
 MAJKA_WLT_PATH = "majka/majka.w-lt"
-LOGLEVEL_DEFAULT = "DEBUG"
+LOGLEVEL_DEFAULT = "INFO"
 
 BLOCKED_LEMMA = ["dobřit"]
 BLOCKED_K1 = ["malá"]
