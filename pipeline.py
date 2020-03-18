@@ -4,6 +4,7 @@
 """
 import logging
 import os
+import re
 import sys
 
 from majka import Majka
@@ -16,6 +17,13 @@ BLOCKED_LEMMA = ["dobřit"]
 
 MORPH = Majka(MAJKA_WLT_PATH)
 LOGGER = logging.getLogger('deep-nlp-pipeline')
+
+RE_EMOTICONS = re.compile(u'['
+                          u'\U0001F300-\U0001F64F'
+                          u'\U0001F680-\U0001F6FF'
+                          u'\u2600-\u26FF\u2700-\u27BF]+',
+                          re.UNICODE)
+
 
 
 def local_morph(word):
@@ -47,7 +55,8 @@ def parse_document(text):
     """
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
-        for word in word_tokenize(sentence):
+        sentence_without_emoticons = RE_EMOTICONS.sub('', sentence)
+        for word in word_tokenize(sentence_without_emoticons):
             res = MORPH.find(word)
             if res == []:
                 res = local_morph(word)
