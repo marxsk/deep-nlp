@@ -34,7 +34,10 @@ def local_morph(word):
     """
     known_words = {
         '.': [{'lemma': '.', 'tags': {'pos': 'interpunction'}}],
-        ',': [{'lemma': ',', 'tags': {'pos': 'interpunction'}}]
+        '!': [{'lemma': '!', 'tags': {'pos': 'interpunction'}}],
+        ',': [{'lemma': ',', 'tags': {'pos': 'interpunction'}}],
+        '(': [{'lemma': '(', 'tags': {'pos': 'parentheses'}}],
+        ')': [{'lemma': ')', 'tags': {'pos': 'parentheses'}}]
     }
     return known_words[word] if word in known_words else []
 
