@@ -2,6 +2,7 @@
 
     @param sys.argv[1] - Name of the file where first line is read and parsed
 """
+import itertools
 import logging
 import os
 import re
@@ -148,9 +149,14 @@ def parse_document(text):
                                               for token in token_analysis])))
 
             print(sentence)
-            print(new_sentence)
-            print(cfg_sentence)
-            print("-----")
+#            print(new_sentence)
+#            print(cfg_sentence)
+
+            # create all combinations that we have to parse
+            for c in itertools.product(*cfg_sentence):
+                print(c)
+
+            print("----sentence----")
 
 
 if __name__ == "__main__":
