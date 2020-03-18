@@ -126,6 +126,10 @@ def parse_document(text):
                     token_analysis.append(base_form)
                 new_sentence.append(list(set(token_analysis)))
 
+            # remove trailing punctuation
+            if new_sentence[-1] in [["."], ["!"]]:
+                new_sentence.pop()
+            print(sentence)
             print(new_sentence)
             print("-----")
 
