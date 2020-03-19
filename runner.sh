@@ -15,6 +15,8 @@ fi
 if [ -z "$2" ]; then
     # we are not in production mode
     OUTPUT="output-tmp"
+    # remove old content so we do not compare output of previous builds 
+    rm ${OUTPUT}/*
 fi
 
 mkdir -p ${OUTPUT}
