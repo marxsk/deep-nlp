@@ -92,6 +92,9 @@ def run_earley_parser(sentence, counter, variant, label, directory):
     except Exception as e:
         LOGGER.info(e)
         LOGGER.info("Unable to create a tree for <%s>", (" ".join(sentence)))
+        return False
+
+    return True
 
 
 def add_semtypes_for_lemma(lemma):
@@ -218,9 +221,10 @@ def parse_document(text, output_directory):
             variant = 1
             for c in itertools.product(*cfg_sentence):
                 if c:
-                    run_earley_parser(c, sentence_counter, variant,
-                                      sentence_without_emoticons, output_directory)
-                    variant += 1
+                    success = run_earley_parser(c, sentence_counter, variant,
+                                                sentence_without_emoticons, output_directory)
+                    if success:
+                        variant += 1
 
 #            print("----sentence----")
 
