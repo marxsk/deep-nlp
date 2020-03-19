@@ -26,12 +26,13 @@ TYPES_MEASURE = ["pravděpodobně", "velice", "vždy", "dobře", "top", "naprost
                  "velmi", "všechno", "lehce", "fakt", "ideální", "vše", "maximálně", "dobrý",
                  "nadměrný", "nejlepší", "skvělý", "krásně", "pořádný",
                  "velký", "výrazný", "dokonale", "celkem", "ok", "podstatný", "kladně",
-                 "neustále", "nový", "ohromně", "veškerý"]
+                 "neustále", "nový", "ohromně", "veškerý",
+                 "všechen", "bezva"]
 
 TYPES_QUALITY = ["přehledný", "snadný", "intuitivní", "jasný", "rychlý", "funkční", "ovladatelný",
                  "jednoduchý", "příjemný", "pěkný", "moderní", "povedený", "spolehlivý", "logický",
                  "pohodlný", "chytrý", "komfortní", "šikovný", "pochopitelný", "zdařilý", "čistý",
-                 "svižný", "zabezpečený", "praktický", "užitečný", "optimalizovaný"]
+                 "svižný", "zabezpečený", "praktický", "užitečný", "optimalizovaný", "intuitivný"]
 
 TYPES_APP = ["aplikace", "web", "tlačítko", "bankovnictví", "banka", "app", "apka", "transakce",
              "touchID", "faceID", "graf", "platba", "autorizace"]
