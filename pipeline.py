@@ -74,7 +74,7 @@ PARSER = Lark(GRAMMAR, parser='earley', start='sentence',
 sentence_counter = 0
 
 
-def run_earley_parser(sentence, counter, label):
+def run_earley_parser(sentence, counter, variant, label, directory):
     if '#unknown' in sentence:
         # Unknown token cannot be resolved into valid tree
         return None
@@ -85,8 +85,8 @@ def run_earley_parser(sentence, counter, label):
 #        print(parse_tree.pretty())
 
         tree.pydot__tree_to_png(
-            parse_tree, 'tmp/sentence-{:03d}.png'.format(counter), label=label + "\n" + " ".join(sentence))
-        with open("tmp/sentence-{:03d}.pretty".format(counter), "w") as f:
+            parse_tree, directory + '/sentence-{:03d}-{:02d}.png'.format(counter, variant), label=label + "\n" + " ".join(sentence))
+        with open(directory + "/sentence-{:03d}-{:02d}.pretty".format(counter, variant), "w") as f:
             f.write(parse_tree.pretty())
 
     except Exception as e:
@@ -145,7 +145,7 @@ def local_blocklist(analyses):
     return result
 
 
-def parse_document(text):
+def parse_document(text, output_directory):
     """ Parse document and show results on standard output
 
         @param text - Document (several sentences) to parse
@@ -215,10 +215,12 @@ def parse_document(text):
 #            print(cfg_sentence)
 
             # create all combinations that we have to parse
+            variant = 1
             for c in itertools.product(*cfg_sentence):
                 if c:
-                    run_earley_parser(c, sentence_counter,
-                                      sentence_without_emoticons)
+                    run_earley_parser(c, sentence_counter, variant,
+                                      sentence_without_emoticons, output_directory)
+                    variant += 1
 
 #            print("----sentence----")
 
@@ -228,4 +230,4 @@ if __name__ == "__main__":
 
     with open(sys.argv[1], 'r', encoding='utf-8') as fh:
         for line in fh.readlines():
-            parse_document(line)
+            parse_document(line, sys.argv[2])
