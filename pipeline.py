@@ -52,7 +52,7 @@ GRAMMAR = """
 
     t_app: (t_quality eps_app)
 
-    t_quality: t_quality_single | ((t_quality_single ",") + t_quality_single) | (t_quality "a" t_quality_single)
+    t_quality: t_quality_single | ((t_quality_single ",")+ t_quality_single) | ((t_quality_single ",")* t_quality_single "a" t_quality_single)
     t_quality_single: (QUALITY) | (t_measure eps_quality)
 
     t_measure: MEASURE | MEASURE MEASURE
