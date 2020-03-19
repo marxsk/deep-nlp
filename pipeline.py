@@ -125,7 +125,7 @@ def add_semtypes_for_lemma(vocabulary, lemma):
     """ Return string representation of list of all semantic types for given lemma """
     # @todo: is POS required for correct semtype(?)
     all_possible_types = []
-    for semtype in vocabulary.get('lemma', []):
+    for semtype in vocabulary.get(lemma, []):
         all_possible_types.append(semtype)
     return ":".join(all_possible_types)
 
