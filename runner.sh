@@ -29,7 +29,7 @@ wc -l ${OUTPUT}/tree.md5 $1 | head -n2
 
 if [ "$?" -eq "0" ]; then
     # results are same, so there is no need to preserve them
-    if [ ! -z "$2"]; then
+    if [ ! -z "$2" ]; then
         rm -rf ${OUTPUT}
     fi
 fi
