@@ -171,6 +171,7 @@ def parse_document(text, output_directory):
         contain_verb = False
         valid_sentence = True
         tokens = []
+        success_combinations = []
 
         sentence_without_emoticons = RE_EMOTICONS.sub('', sentence)
         sentence_counter += 1
@@ -215,28 +216,26 @@ def parse_document(text, output_directory):
                 cfg_sentence.append(list(set([normalize_sem_token(token)
                                               for token in token_analysis])))
 
-            print(">>>")
-            print(cfg_sentence)
-
             if ["#unknown"] in cfg_sentence:
                 # sentences that cannot be desambiguated because at least one word is completely unknown
                 LOGGER.error(new_sentence)
                 continue
 
-#            print(sentence)
-#            print(new_sentence)
-#            print(cfg_sentence)
-
             # create all combinations that we have to parse
             variant = 1
+            print(cfg_sentence)
             for c in itertools.product(*cfg_sentence):
                 if c:
                     success = run_earley_parser(c, sentence_counter, variant,
                                                 sentence_without_emoticons, output_directory)
                     if success:
                         variant += 1
+                        success_combinations.append(c)
 
-#            print("----sentence----")
+        if not success_combinations:
+            print(">>>")
+            print(sentence)
+            print(success_combinations)
 
 
 if __name__ == "__main__":
