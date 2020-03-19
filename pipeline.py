@@ -13,6 +13,7 @@ from majka import Majka
 from nltk import sent_tokenize, word_tokenize
 
 MAJKA_WLT_PATH = "majka/majka.w-lt"
+VOCABULARY_PATH = "vocabulary.csv"
 LOGLEVEL_DEFAULT = "INFO"
 
 BLOCKED_LEMMA = ["dobřit"]
@@ -106,18 +107,26 @@ def run_earley_parser(sentence, counter, variant, label, directory):
     return True
 
 
-def add_semtypes_for_lemma(lemma):
+def load_vocabulary():
+    """ Load vocabulary of TERMINAL:WORD items """
+    vocabulary = {}
+
+    with open(VOCABULARY_PATH, "r") as f:
+        for line in f.readlines():
+            (semtype, word) = line.strip().split(":")
+            if not word in vocabulary:
+                vocabulary[word] = set()
+            vocabulary[word].add(semtype)
+
+    return vocabulary
+
+
+def add_semtypes_for_lemma(vocabulary, lemma):
     """ Return string representation of list of all semantic types for given lemma """
     # @todo: is POS required for correct semtype(?)
     all_possible_types = []
-    if lemma in TYPES_MEASURE:
-        all_possible_types.append("#measure")
-    if lemma in TYPES_QUALITY:
-        all_possible_types.append("#quality")
-    if lemma in TYPES_APP:
-        all_possible_types.append("#app")
-    if lemma in TYPES_ATTR_APP:
-        all_possible_types.append("#attr")
+    for semtype in vocabulary.get('lemma', []):
+        all_possible_types.append(semtype)
     return ":".join(all_possible_types)
 
 
@@ -167,6 +176,8 @@ def parse_document(text, output_directory):
     """
     global sentence_counter
 
+    vocabulary = load_vocabulary()
+
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
         contain_verb = False
@@ -192,7 +203,8 @@ def parse_document(text, output_directory):
                             'Token "%s" was recognized but it has no tags at all', word)
             res = local_blocklist(res)
             for analyse in res:
-                analyse['semtype'] = add_semtypes_for_lemma(analyse['lemma'])
+                analyse['semtype'] = add_semtypes_for_lemma(
+                    vocabulary, analyse['lemma'])
                 # @note: ignore all sentences with verb
                 if analyse.get('tags', {}).get('pos', '') == 'verb':
                     contain_verb = True
