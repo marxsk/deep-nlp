@@ -24,7 +24,7 @@ cd ${OUTPUT}
 find *pretty -type f -exec md5sum {} + | sort -k 2 > tree.md5
 cd ..
 
-diff -c1 ${OUTPUT}/tree.md5 ${REFERENCE}/tree.md5
+diff -c1 ${REFERENCE}/tree.md5 ${OUTPUT}/tree.md5
 wc -l ${OUTPUT}/tree.md5 $1 | head -n2
 
 if [ "$?" -eq "0" ]; then
