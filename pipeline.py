@@ -36,6 +36,11 @@ TYPES_QUALITY = ["přehledný", "snadný", "intuitivní", "jasný", "rychlý", "
 TYPES_APP = ["aplikace", "web", "tlačítko", "bankovnictví", "banka", "app", "apka", "transakce",
              "touchID", "faceID", "graf", "platba", "autorizace"]
 
+TYPES_ATTR_APP = ["reklama", "problém", "spolehlivost", "funkce", "stabilita", "pozitivum", "použití",
+                  "používání", "grafika", "design", "přehlednost", "jednoduchost", "aktualizace",
+                  "prostředí", "ovládání", "vylepšení", "vzhled", "využití", "funkčnost", "rychlost",
+                  "věc", "zapínání", "vypínání", "update", "ovládání"]
+
 RE_EMOTICONS = re.compile(u'['
                           u'\U0001F300-\U0001F64F'
                           u'\U0001F680-\U0001F6FF'
@@ -48,9 +53,11 @@ GRAMMAR = """
     // eps_* -> TERMINAL alebo epsilon 
     // *_single -> NETERMINAL bez koordinacii
 
-    sentence: t_app
+    sentence: t_app | t_attr
 
-    t_app: (t_quality eps_app)
+    t_app: (t_quality eps_app) | (APP t_quality)
+
+    t_attr: (t_quality ATTR eps_app) | (ATTR eps_app t_quality)
 
     t_quality: t_quality_single | ((t_quality_single ",")+ t_quality_single) | ((t_quality_single ",")* t_quality_single "a" t_quality_single)
     t_quality_single: (QUALITY) | (t_measure eps_quality)
@@ -65,6 +72,7 @@ GRAMMAR = """
     MEASURE: "#measure"
     APP: "#app"
     QUALITY: "#quality"
+    ATTR: "#attr"
 
     %ignore " "
 """
@@ -107,6 +115,8 @@ def add_semtypes_for_lemma(lemma):
         all_possible_types.append("#quality")
     if lemma in TYPES_APP:
         all_possible_types.append("#app")
+    if lemma in TYPES_ATTR_APP:
+        all_possible_types.append("#attr")
     return ":".join(all_possible_types)
 
 
