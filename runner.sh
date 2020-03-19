@@ -24,8 +24,8 @@ cd ${OUTPUT}
 find *pretty -type f -exec md5sum {} + | sort -k 2 > tree.md5
 cd ..
 
-diff -c1 ${REFERENCE}/tree.md5 ${OUTPUT}/tree.md5
 wc -l ${OUTPUT}/tree.md5 $1 | head -n2
+diff -c1 ${REFERENCE}/tree.md5 ${OUTPUT}/tree.md5
 
 if [ "$?" -eq "0" ]; then
     # results are same, so there is no need to preserve them
