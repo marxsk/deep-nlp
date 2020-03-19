@@ -74,20 +74,21 @@ PARSER = Lark(GRAMMAR, parser='earley', start='sentence',
 sentence_counter = 0
 
 
-def run_earley_parser(sentence, label):
-    global sentence_counter
-
+def run_earley_parser(sentence, counter, label):
     if '#unknown' in sentence:
         # Unknown token cannot be resolved into valid tree
         return None
 
     try:
         parse_tree = PARSER.parse(" ".join(sentence))
-        print(sentence)
-        print(parse_tree.pretty())
+#        print(sentence)
+#        print(parse_tree.pretty())
 
         tree.pydot__tree_to_png(
-            parse_tree, 'tmp/sentence-%d.png' % (sentence_counter), label=label + "\n" + " ".join(sentence))
+            parse_tree, 'tmp/sentence-{:03d}.png'.format(counter), label=label + "\n" + " ".join(sentence))
+        with open("tmp/sentence-{:03d}.pretty".format(counter), "w") as f:
+            f.write(parse_tree.pretty())
+
     except Exception as e:
         LOGGER.info(e)
         LOGGER.info("Unable to create a tree for <%s>", (" ".join(sentence)))
@@ -216,7 +217,8 @@ def parse_document(text):
             # create all combinations that we have to parse
             for c in itertools.product(*cfg_sentence):
                 if c:
-                    run_earley_parser(c, sentence_without_emoticons)
+                    run_earley_parser(c, sentence_counter,
+                                      sentence_without_emoticons)
 
 #            print("----sentence----")
 
