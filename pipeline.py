@@ -45,13 +45,22 @@ RE_EMOTICONS = re.compile(u'['
 ALLOWED_TERMINALS = ["a", ","]
 
 GRAMMAR = """
+    // eps_* -> TERMINAL alebo epsilon 
+    // *_single -> NETERMINAL bez koordinacii
+
     sentence: t_app
 
-    t_app: (t_quality APP) | (t_quality)
+    t_app: (t_quality eps_app)
 
-    t_quality: (QUALITY) | (t_measure QUALITY) | (t_measure) | (t_quality "," t_quality) | (t_quality "a" t_quality)
+    t_quality: t_quality_single | ((t_quality_single ",") + t_quality_single) | (t_quality "a" t_quality_single)
+    t_quality_single: (QUALITY) | (t_measure eps_quality)
 
     t_measure: MEASURE | MEASURE MEASURE
+
+    eps_quality: QUALITY | empty
+    eps_app: APP | empty
+
+    empty:
 
     MEASURE: "#measure"
     APP: "#app"
