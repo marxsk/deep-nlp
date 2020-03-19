@@ -71,10 +71,10 @@ GRAMMAR = """
 PARSER = Lark(GRAMMAR, parser='earley', start='sentence',
               debug=True, ambiguity='explicit')
 
-sentence_counter = 1
+sentence_counter = 0
 
 
-def run_earley_parser(sentence):
+def run_earley_parser(sentence, label):
     global sentence_counter
 
     if '#unknown' in sentence:
@@ -87,8 +87,7 @@ def run_earley_parser(sentence):
         print(parse_tree.pretty())
 
         tree.pydot__tree_to_png(
-            parse_tree, 'tmp/sentence-%d.png' % (sentence_counter))
-        sentence_counter += 1
+            parse_tree, 'tmp/sentence-%d.png' % (sentence_counter), label=label + "\n" + " ".join(sentence))
     except Exception as e:
         LOGGER.info(e)
         LOGGER.info("Unable to create a tree for <%s>", (" ".join(sentence)))
@@ -150,6 +149,8 @@ def parse_document(text):
 
         @param text - Document (several sentences) to parse
     """
+    global sentence_counter
+
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
         contain_verb = False
@@ -157,6 +158,8 @@ def parse_document(text):
         tokens = []
 
         sentence_without_emoticons = RE_EMOTICONS.sub('', sentence)
+        sentence_counter += 1
+
         for word in word_tokenize(sentence_without_emoticons):
             res = MORPH.find(word)
             if res == []:
@@ -213,7 +216,7 @@ def parse_document(text):
             # create all combinations that we have to parse
             for c in itertools.product(*cfg_sentence):
                 if c:
-                    run_earley_parser(c)
+                    run_earley_parser(c, sentence_without_emoticons)
 
 #            print("----sentence----")
 
