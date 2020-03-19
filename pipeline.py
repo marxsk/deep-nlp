@@ -148,6 +148,7 @@ def local_morph(word):
     """
     known_words = {
         '.': [{'lemma': '.', 'tags': {'pos': 'interpunction'}}],
+        '...': [{'lemma': '...', 'tags': {'pos': 'interpunction'}}],
         '!': [{'lemma': '!', 'tags': {'pos': 'interpunction'}}],
         ',': [{'lemma': ',', 'tags': {'pos': 'interpunction'}}],
         '(': [{'lemma': '(', 'tags': {'pos': 'parentheses'}}],
@@ -221,7 +222,7 @@ def parse_document(text, output_directory):
                 new_sentence.append(list(set(token_analysis)))
 
             # remove trailing punctuation
-            if new_sentence[-1] in [["."], ["!"]]:
+            if new_sentence[-1] in [["."], ["!"], ["..."]]:
                 new_sentence.pop()
 
             cfg_sentence = []
