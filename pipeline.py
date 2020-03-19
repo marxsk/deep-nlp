@@ -8,7 +8,7 @@ import os
 import re
 import sys
 
-from lark import Lark
+from lark import Lark, tree
 from majka import Majka
 from nltk import sent_tokenize, word_tokenize
 
@@ -62,8 +62,12 @@ GRAMMAR = """
 PARSER = Lark(GRAMMAR, parser='earley', start='sentence',
               debug=True, ambiguity='explicit')
 
+sentence_counter = 1
+
 
 def run_earley_parser(sentence):
+    global sentence_counter
+
     if '#unknown' in sentence:
         # Unknown token cannot be resolved into valid tree
         return None
@@ -72,7 +76,12 @@ def run_earley_parser(sentence):
         parse_tree = PARSER.parse(" ".join(sentence))
         print(sentence)
         print(parse_tree.pretty())
-    except:
+
+        tree.pydot__tree_to_png(
+            parse_tree, 'tmp/sentence-%d.png' % (sentence_counter))
+        sentence_counter += 1
+    except Exception as e:
+        LOGGER.info(e)
         LOGGER.info("Unable to create a tree for <%s>", (" ".join(sentence)))
 
 
