@@ -117,7 +117,7 @@ def normalize_sem_token(token):
     elif token in ALLOWED_TERMINALS:
         return token
     else:
-        return "#unknown"  # _" + token
+        return "#unknown_" + token
 
 
 def local_morph(word):
@@ -131,7 +131,8 @@ def local_morph(word):
         '!': [{'lemma': '!', 'tags': {'pos': 'interpunction'}}],
         ',': [{'lemma': ',', 'tags': {'pos': 'interpunction'}}],
         '(': [{'lemma': '(', 'tags': {'pos': 'parentheses'}}],
-        ')': [{'lemma': ')', 'tags': {'pos': 'parentheses'}}]
+        ')': [{'lemma': ')', 'tags': {'pos': 'parentheses'}}],
+        "OK": [{'lemma': 'ok', 'tags': {'pos': 'abbreviation'}}]
     }
     return known_words[word] if word in known_words else []
 
@@ -165,12 +166,11 @@ def parse_document(text, output_directory):
         sentence_counter += 1
 
         for word in word_tokenize(sentence_without_emoticons):
-            res = MORPH.find(word)
+            res = MORPH.find(word) + local_morph(word)
+
             if res == []:
-                res = local_morph(word)
-                if res == []:
-                    valid_sentence = False
-                    LOGGER.debug('Unknown token detected "%s"', word)
+                valid_sentence = False
+                LOGGER.debug('Unknown token detected "%s"', word)
 
             if res:
                 for candidate in res:
