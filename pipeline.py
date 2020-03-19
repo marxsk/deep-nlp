@@ -96,7 +96,7 @@ def normalize_sem_token(token):
     elif token in ALLOWED_TERMINALS:
         return token
     else:
-        return "#unknown"
+        return "#unknown"  # _" + token
 
 
 def local_morph(word):
@@ -179,6 +179,14 @@ def parse_document(text):
             for token_analysis in new_sentence:
                 cfg_sentence.append(list(set([normalize_sem_token(token)
                                               for token in token_analysis])))
+
+            print(">>>")
+            print(cfg_sentence)
+
+            if ["#unknown"] in cfg_sentence:
+                # sentences that cannot be desambiguated because at least one word is completely unknown
+                LOGGER.error(new_sentence)
+                continue
 
 #            print(sentence)
 #            print(new_sentence)
