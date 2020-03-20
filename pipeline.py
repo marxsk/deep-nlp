@@ -214,7 +214,16 @@ def parse_document(text, output_directory):
                 if analyse.get('tags', {}).get('pos', '') == 'verb':
                     contain_verb = True
 
-            tokens.append(res)
+            # unpack semtypes from string to multiple elements
+            unpack_res = []
+            for analyse in res:
+                for semtype in analyse['semtype'].split(":"):
+                    new_analyses = dict(analyse)
+                    new_analyses['semtype'] = semtype
+                    unpack_res.append(new_analyses)
+
+            tokens.append(unpack_res)
+
         if not contain_verb and valid_sentence and tokens:
             new_sentence = []
             for token in tokens:
