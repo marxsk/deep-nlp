@@ -23,7 +23,7 @@ mkdir -p ${OUTPUT}
 
 python3 pipeline.py $1 ${OUTPUT}
 cd ${OUTPUT}
-find *pretty -type f -exec md5sum {} + | sort -k 2 > tree.md5
+find *pretty -type f -exec md5sum {} + | sed 's/-[[:digit:]][[:digit:]]\././' | sort -k 2 > tree.md5
 cd ..
 
 wc -l ${OUTPUT}/tree.md5 $1 | head -n2
