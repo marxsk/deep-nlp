@@ -27,7 +27,7 @@ find *pretty -type f -exec md5sum {} + | sed 's/-[[:digit:]][[:digit:]]\././' | 
 cd ..
 
 wc -l ${OUTPUT}/tree.md5 $1 | head -n2
-diff -c1 ${REFERENCE}/tree.md5 ${OUTPUT}/tree.md5
+diff -c0 ${REFERENCE}/tree.md5 ${OUTPUT}/tree.md5
 
 if [ "$?" -eq "0" ]; then
     # results are same, so there is no need to preserve them

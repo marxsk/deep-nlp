@@ -33,6 +33,7 @@ ALLOWED_TERMINALS = ["a", ","]
 GRAMMAR = """
     // eps_* -> TERMINAL alebo epsilon
     // *_single -> NETERMINAL bez koordinacii
+    // *_req -> vyžaduje naplnenie argumentu, aby sa dalo použiť vo vete
 
     sentence: t_app | (t_attr_complex)
 
@@ -43,9 +44,10 @@ GRAMMAR = """
     t_attr_single: t_quality* ATTR
 
     t_quality: (t_quality_single) | ((t_quality_single ",")+ t_quality_single) | ((t_quality_single ",")* t_quality_single "a" t_quality_single)
-    t_quality_single: (QUALITY) | (t_measure eps_quality)
+    t_quality_single: (QUALITY) | (t_measure eps_quality) | (t_measure_req QUALITY)
 
-    t_measure: (MEASURE) | (MEASURE MEASURE)
+    t_measure_req: (MEASURE_REQ)
+    t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
 
     eps_quality: QUALITY | empty
     eps_app: APP | empty
@@ -53,6 +55,7 @@ GRAMMAR = """
     empty:
 
     MEASURE: "#measure"
+    MEASURE_REQ: "#measure_req"
     APP: "#app"
     QUALITY: "#quality"
     ATTR: "#attr"
