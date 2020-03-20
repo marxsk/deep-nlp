@@ -77,6 +77,7 @@ GRAMMAR = """
     APP: "#app"
     QUALITY: "#quality"
     ATTR: "#attr"
+    FLOSKUKE: "#floskule"
 
     %ignore " "
 """
@@ -221,9 +222,10 @@ def parse_document(text, output_directory):
                     for semtype in analyse['semtype']:
                         new_analyses = dict(analyse)
                         new_analyses['semtype'] = semtype
+                        unpack_res.append(new_analyses)
                 else:
                     new_analyses = dict(analyse)
-                unpack_res.append(new_analyses)
+                    unpack_res.append(new_analyses)
 
             tokens.append(unpack_res)
 
