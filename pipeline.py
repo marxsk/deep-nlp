@@ -22,27 +22,6 @@ BLOCKED_K1 = ["malá"]
 MORPH = Majka(MAJKA_WLT_PATH)
 LOGGER = logging.getLogger('deep-nlp-pipeline')
 
-TYPES_MEASURE = ["pravděpodobně", "velice", "vždy", "dobře", "top", "naprostý", "perfektní",
-                 "hezky", "spousta", "super", "výborný", "vymakaný", "samý",
-                 "velmi", "všechno", "lehce", "fakt", "ideální", "vše", "maximálně", "dobrý",
-                 "nadměrný", "nejlepší", "skvělý", "krásně", "pořádný",
-                 "velký", "výrazný", "dokonale", "celkem", "ok", "podstatný", "kladně",
-                 "neustále", "nový", "ohromně", "veškerý",
-                 "všechen", "bezva"]
-
-TYPES_QUALITY = ["přehledný", "snadný", "intuitivní", "jasný", "rychlý", "funkční", "ovladatelný",
-                 "jednoduchý", "příjemný", "pěkný", "moderní", "povedený", "spolehlivý", "logický",
-                 "pohodlný", "chytrý", "komfortní", "šikovný", "pochopitelný", "zdařilý", "čistý",
-                 "svižný", "zabezpečený", "praktický", "užitečný", "optimalizovaný", "intuitivný"]
-
-TYPES_APP = ["aplikace", "web", "tlačítko", "bankovnictví", "banka", "app", "apka", "transakce",
-             "touchID", "faceID", "graf", "platba", "autorizace"]
-
-TYPES_ATTR_APP = ["reklama", "problém", "spolehlivost", "funkce", "stabilita", "pozitivum", "použití",
-                  "používání", "grafika", "design", "přehlednost", "jednoduchost", "aktualizace",
-                  "prostředí", "ovládání", "vylepšení", "vzhled", "využití", "funkčnost", "rychlost",
-                  "věc", "zapínání", "vypínání", "update", "ovládání"]
-
 RE_EMOTICONS = re.compile(u'['
                           u'\U0001F300-\U0001F64F'
                           u'\U0001F680-\U0001F6FF'
