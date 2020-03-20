@@ -183,6 +183,8 @@ def parse_document(text, output_directory):
 
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
+        LOGGER.info("**** Begin of the sentence parsing")
+
         contain_verb = False
         valid_sentence = True
         tokens = []
@@ -252,6 +254,8 @@ def parse_document(text, output_directory):
             print(">>>")
             print(sentence)
             print(success_combinations)
+
+        LOGGER.info("**** End of the sentence parsing\n\n\n\n\n")
 
 
 if __name__ == "__main__":
