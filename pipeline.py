@@ -56,7 +56,7 @@ GRAMMAR = """
     APP: "#app"
     QUALITY: "#quality"
     ATTR: "#attr"
-    FLOSKUKE: "#floskule"
+    FLOSKULE: "#floskule"
 
     %ignore " "
 """
