@@ -72,7 +72,8 @@ def run_earley_parser(sentence, counter, variant, label, directory):
         return None
 
     try:
-        parse_tree = PARSER.parse(" ".join(sentence))
+        sentence_wo_floskule = [x for x in sentence if x != "#floskule"]
+        parse_tree = PARSER.parse(" ".join(sentence_wo_floskule))
 #        print(sentence)
 #        print(parse_tree.pretty())
 
