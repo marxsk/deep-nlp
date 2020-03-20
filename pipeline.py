@@ -129,7 +129,7 @@ def add_semtypes_for_lemma(vocabulary, lemma):
     all_possible_types = []
     for semtype in vocabulary.get(lemma, []):
         all_possible_types.append(semtype)
-    return ":".join(all_possible_types)
+    return all_possible_types
 
 
 def normalize_sem_token(token):
@@ -217,10 +217,13 @@ def parse_document(text, output_directory):
             # unpack semtypes from string to multiple elements
             unpack_res = []
             for analyse in res:
-                for semtype in analyse['semtype'].split(":"):
+                if analyse['semtype']:
+                    for semtype in analyse['semtype']:
+                        new_analyses = dict(analyse)
+                        new_analyses['semtype'] = semtype
+                else:
                     new_analyses = dict(analyse)
-                    new_analyses['semtype'] = semtype
-                    unpack_res.append(new_analyses)
+                unpack_res.append(new_analyses)
 
             tokens.append(unpack_res)
 
