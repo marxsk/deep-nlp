@@ -8,6 +8,10 @@ class TestPreprocessor(unittest.TestCase):
         grammar = "// this is comment line"
         self.assertEqual(preprocessor(grammar), "")
 
+    def test_commands_are_left_untouched(self):
+        grammar = "\%ignore abc"
+        self.assertEqual(preprocessor(grammar), '\%ignore abc')
+
     def test_empty_lines_are_removed(self):
         grammar = """
 

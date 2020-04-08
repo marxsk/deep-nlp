@@ -25,6 +25,10 @@ def preprocessor(grammar):
         if not line:
             continue
 
+        if not ":" in line:
+            output.append(line)
+            continue
+
         (left, right) = line.split(':', 1)
         left = left.strip()
         right = right.strip()
