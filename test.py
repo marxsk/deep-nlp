@@ -51,6 +51,20 @@ class TestPreprocessor(unittest.TestCase):
         self.assertEqual(preprocessor(grammar).strip(),
                          'sentence:(foo)|(bar)\nfoo:(bar)')
 
+    def test_if_epsilon_nonterminal_was_added_for_terminal(self):
+        grammar1 = """
+            TERMINAL: "foo"
+        """
+        self.assertEqual(preprocessor(grammar1).strip(),
+                         'TERMINAL:("foo")\neps_terminal: TERMINAL | empty')
+
+        grammar2 = """
+            TERMINAL: "foo"
+            TERMINAL: "bar"
+        """
+        self.assertEqual(preprocessor(grammar2).strip(),
+                         'TERMINAL:("foo")|("bar")\neps_terminal: TERMINAL | empty')
+
 
 if __name__ == '__main__':
     unittest.main()

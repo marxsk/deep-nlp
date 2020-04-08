@@ -39,6 +39,14 @@ def preprocessor(grammar):
             known_rule_line[left] = len(output)
             output.append('%s:(%s)' % (left, right))
 
+    for left_side in known_rule_line:
+        # for every terminal add epsilon rule
+        if left_side.upper() == left_side:
+            lowercase_left_side = left_side.lower()
+
+            output.append('eps_%s: %s | empty' %
+                          (lowercase_left_side, left_side))
+
     return '\n'.join(output)
 
 
