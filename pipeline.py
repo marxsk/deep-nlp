@@ -12,6 +12,32 @@ from lark import Lark, tree
 from majka import Majka
 from nltk import sent_tokenize, word_tokenize
 
+
+def preprocessor(grammar):
+    output = []
+    known_rule_line = {}
+
+    for line in grammar.split('\n'):
+        line = line.strip()
+        if line.startswith('//'):
+            continue
+
+        if not line:
+            continue
+
+        (left, right) = line.split(':', 1)
+        left = left.strip()
+        right = right.strip()
+
+        if left in known_rule_line:
+            output[known_rule_line[left]] += '|(%s)' % (right)
+        else:
+            known_rule_line[left] = len(output)
+            output.append('%s:(%s)' % (left, right))
+
+    return '\n'.join(output)
+
+
 MAJKA_WLT_PATH = "majka/majka.w-lt"
 VOCABULARY_PATH = "vocabulary.csv"
 LOGLEVEL_DEFAULT = "INFO"
@@ -35,7 +61,8 @@ GRAMMAR = """
     // *_single -> NETERMINAL bez koordinacii
     // *_req -> vyžaduje naplnenie argumentu, aby sa dalo použiť vo vete
 
-    sentence: t_app | (t_attr_complex)
+    sentence: t_app
+    sentence: t_attr_complex
 
     t_app: (t_quality eps_app) | (APP t_quality)
 
