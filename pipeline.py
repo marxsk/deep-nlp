@@ -52,6 +52,11 @@ def preprocessor(grammar):
             output.append('eps_%s: %s | empty' %
                           (lowercase_left_side, left_side))
 
+    # add epsilon terminal
+    output.append('empty:')
+    # ignore white-space as a token; we are working with real-tokens separated by white-space
+    output.append('%ignore " "')
+
     return '\n'.join(output)
 
 
@@ -93,16 +98,12 @@ GRAMMAR = """
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
 
-    empty:
-
     MEASURE: "#measure"
     MEASURE_REQ: "#measure_req"
     APP: "#app"
     QUALITY: "#quality"
     ATTR: "#attr"
     FLOSKULE: "#floskule"
-
-    %ignore " "
 """
 sentence_counter = 0
 
