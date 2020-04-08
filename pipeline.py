@@ -63,9 +63,6 @@ GRAMMAR = """
 
     %ignore " "
 """
-PARSER = Lark(GRAMMAR, parser='earley', start='sentence',
-              debug=True, ambiguity='explicit')
-
 sentence_counter = 0
 
 
@@ -258,6 +255,9 @@ def parse_document(text, output_directory):
 if __name__ == "__main__":
     logging.basicConfig(level=os.environ.get("LOGLEVEL", LOGLEVEL_DEFAULT))
 
+    PARSER = Lark(preprocessor(GRAMMAR), parser='earley', start='sentence',
+                  debug=True, ambiguity='explicit')
+
     with open(sys.argv[1], 'r', encoding='utf-8') as fh:
-        for line in fh.readlines():
-            parse_document(line, sys.argv[2])
+        for input_line in fh.readlines():
+            parse_document(input_line, sys.argv[2])
