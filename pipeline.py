@@ -44,13 +44,18 @@ def preprocessor(grammar):
             known_rule_line[left] = len(output)
             output.append('%s:(%s)' % (left, right))
 
+    # for every terminal add epsilon rule
     for left_side in known_rule_line:
-        # for every terminal add epsilon rule
         if left_side.upper() == left_side:
             lowercase_left_side = left_side.lower()
-
             output.append('eps_%s: %s | empty' %
                           (lowercase_left_side, left_side))
+
+    # for every _single non-terminal, creates coordination
+    for left_side in known_rule_line:
+        if left_side.endswith('_single'):
+            output.append('%s: (%s) | ((%s ",")+ %s) | ((%s ",")* %s "a" %s)' %
+                          (left_side[:-7], left_side, left_side, left_side, left_side, left_side, left_side))
 
     # add epsilon terminal
     output.append('empty:')
@@ -79,8 +84,8 @@ RE_EMOTICONS = re.compile(u'['
 ALLOWED_TERMINALS = ["a", ","]
 
 GRAMMAR = """
-    // eps_* -> TERMINAL alebo epsilon
-    // *_single -> NETERMINAL bez koordinacii
+    // eps_* -> TERMINAL alebo epsilon; je generovana automaticky pre kazdy terminal
+    // *_single -> NETERMINAL bez koordinacii ; koordinacia je vygenerovana automaticky
     // *_req -> vyžaduje naplnenie argumentu, aby sa dalo použiť vo vete
 
     sentence: t_app
@@ -89,10 +94,8 @@ GRAMMAR = """
     t_app: (t_quality eps_app) | (APP t_quality)
 
     t_attr_complex: (t_attr eps_app) | (t_attr eps_app t_quality)
-    t_attr: (t_attr_single)  | ((t_attr_single ",")+ t_attr_single) | ((t_attr_single ",")* t_attr_single "a" t_attr_single)
     t_attr_single: t_quality* ATTR
 
-    t_quality: (t_quality_single) | ((t_quality_single ",")+ t_quality_single) | ((t_quality_single ",")* t_quality_single "a" t_quality_single)
     t_quality_single: (QUALITY) | (t_measure eps_quality) | (t_measure_req QUALITY)
 
     t_measure_req: (MEASURE_REQ)

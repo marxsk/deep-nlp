@@ -74,6 +74,13 @@ class TestPreprocessor(unittest.TestCase):
         self.assertEqual(preprocessor(grammar2).strip(),
                          'TERMINAL:("foo")|("bar")\neps_terminal: TERMINAL | empty' + self.permanent_suffix)
 
+    def test_if_coordination_is_added_for_single_suffix(self):
+        grammar = """
+        t_attr_single: t_quality* ATTR
+        """
+        self.assertEqual(preprocessor(
+            grammar), "t_attr_single:(t_quality* ATTR)\nt_attr: (t_attr_single) | ((t_attr_single \",\")+ t_attr_single) | ((t_attr_single \",\")* t_attr_single \"a\" t_attr_single)" + self.permanent_suffix)
+
 
 if __name__ == '__main__':
     unittest.main()
