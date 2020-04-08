@@ -81,6 +81,11 @@ class TestPreprocessor(unittest.TestCase):
         self.assertEqual(preprocessor(
             grammar), "t_attr_single:(t_quality* ATTR)\nt_attr: (t_attr_single) | ((t_attr_single \",\")+ t_attr_single) | ((t_attr_single \",\")* t_attr_single \"a\" t_attr_single)" + self.permanent_suffix)
 
+    def test_generate_simple_terminals(self):
+        grammar = ""
+        self.assertEqual(preprocessor(
+            grammar, {'#foo': 1}), 'FOO: "#foo"\neps_foo: FOO | empty' + self.permanent_suffix)
+
 
 if __name__ == '__main__':
     unittest.main()

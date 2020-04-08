@@ -13,7 +13,7 @@ from majka import Majka
 from nltk import sent_tokenize, word_tokenize
 
 
-def preprocessor(grammar):
+def preprocessor(grammar, semtypes={}):
     """ Grammar preprocessor
 
         * allow repeating of the left-side
@@ -43,6 +43,13 @@ def preprocessor(grammar):
         else:
             known_rule_line[left] = len(output)
             output.append('%s:(%s)' % (left, right))
+
+    # add all terminals according to the dictionary
+    # '#quality -> QUALITY'
+    for semtype in semtypes:
+        terminal_semtype = semtype.upper()[1:]
+        known_rule_line[terminal_semtype] = 0
+        output.append('%s: "%s"' % (terminal_semtype, semtype))
 
     # for every terminal add epsilon rule
     for left_side in known_rule_line:
@@ -100,13 +107,6 @@ GRAMMAR = """
 
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
-
-    MEASURE: "#measure"
-    MEASURE_REQ: "#measure_req"
-    APP: "#app"
-    QUALITY: "#quality"
-    ATTR: "#attr"
-    FLOSKULE: "#floskule"
 """
 sentence_counter = 0
 
@@ -145,6 +145,17 @@ def load_vocabulary():
             if not word in vocabulary:
                 vocabulary[word] = set()
             vocabulary[word].add(semtype)
+
+    return vocabulary
+
+
+def load_semtypes_from_vocabulary():
+    """ Load all semantic types from the vocabulary """
+    vocabulary = {}
+    with open(VOCABULARY_PATH, "r") as f:
+        for line in f.readlines():
+            (semtype, word) = line.strip().split(":")
+            vocabulary[semtype] = "1"
 
     return vocabulary
 
@@ -300,7 +311,7 @@ def parse_document(text, output_directory):
 if __name__ == "__main__":
     logging.basicConfig(level=os.environ.get("LOGLEVEL", LOGLEVEL_DEFAULT))
 
-    PARSER = Lark(preprocessor(GRAMMAR), parser='earley', start='sentence',
+    PARSER = Lark(preprocessor(GRAMMAR, load_semtypes_from_vocabulary()), parser='earley', start='sentence',
                   debug=True, ambiguity='explicit')
 
     with open(sys.argv[1], 'r', encoding='utf-8') as fh:
