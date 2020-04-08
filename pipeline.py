@@ -95,7 +95,7 @@ def preprocessor(grammar, semtypes={}):
 
 MAJKA_WLT_PATH = "majka/majka.w-lt"
 VOCABULARY_PATH = "vocabulary.csv"
-LOGLEVEL_DEFAULT = "INFO"
+LOGLEVEL_DEFAULT = "DEBUG"
 
 BLOCKED_LEMMA = ["dobřit"]
 BLOCKED_K1 = ["malá"]
@@ -109,7 +109,7 @@ RE_EMOTICONS = re.compile(u'['
                           u'\u2600-\u26FF\u2700-\u27BF]+',
                           re.UNICODE)
 
-ALLOWED_TERMINALS = ["a", ","]
+ALLOWED_TERMINALS = ["a", ",", "s"]
 
 GRAMMAR = """
     // eps_* -> TERMINAL alebo epsilon; je generovana automaticky pre kazdy terminal
@@ -118,6 +118,7 @@ GRAMMAR = """
 
     sentence: t_app
     sentence: t_attr_complex
+    sentence: valency_foo_val
 
     t_app: (t_quality eps_app) | (APP t_quality)
 
@@ -128,6 +129,13 @@ GRAMMAR = """
 
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
+
+    valency_foo_val: (t_foo_val empty_prep_s eps_app) | (t_foo_val prep_s APP)
+    t_foo_val: t_measure? FOO_VAL_S
+
+    prep_s: "s"
+    empty_prep_s: empty
+
 """
 sentence_counter = 0
 
@@ -180,7 +188,6 @@ def load_semtypes_from_vocabulary():
         semtypes.sort()
         semcabulary["^".join(semtypes)] = 1
 
-    print(semcabulary)
     return semcabulary
 
 
@@ -263,7 +270,7 @@ def parse_document(text, output_directory):
 
             if res:
                 for candidate in res:
-                    if candidate['tags'] == {}:
+                    if candidate['tags'] == {} and candidate['lemma'] != 's':
                         valid_sentence = False
                         LOGGER.debug(
                             'Token "%s" was recognized but it has no tags at all', word)
