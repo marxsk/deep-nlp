@@ -86,6 +86,26 @@ class TestPreprocessor(unittest.TestCase):
         self.assertEqual(preprocessor(
             grammar, {'#foo': 1}), 'FOO: "#foo"\neps_foo: FOO | empty' + self.permanent_suffix)
 
+    def test_generate_merged_terminals(self):
+        semtypes = {'#floskule^#measure': 1, '#floskule': 1, '#measure': 1}
+        grammar = ""
+
+        self.assertEqual(preprocessor(grammar, semtypes),
+                         """FLOSKULE: "#floskule" | "#floskule^#measure"
+MEASURE: "#floskule^#measure" | "#measure"
+eps_floskule: FLOSKULE | empty
+eps_measure: MEASURE | empty""" + self.permanent_suffix)
+
+    def test_generate_merged_terminals_wo_naives(self):
+        semtypes = {'#floskule^#measure': 1}
+        grammar = ""
+
+        self.assertEqual(preprocessor(grammar, semtypes),
+                         """FLOSKULE: "#floskule" | "#floskule^#measure"
+MEASURE: "#floskule^#measure" | "#measure"
+eps_floskule: FLOSKULE | empty
+eps_measure: MEASURE | empty""" + self.permanent_suffix)
+
 
 if __name__ == '__main__':
     unittest.main()

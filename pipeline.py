@@ -46,10 +46,31 @@ def preprocessor(grammar, semtypes={}):
 
     # add all terminals according to the dictionary
     # '#quality -> QUALITY'
+
+    # check if we have all naive semtypes used in the combined ones
+    keys = list(semtypes.keys())
+    for semtype in keys:
+        for s in semtype.split('^'):
+            if not s in semtypes:
+                semtypes[s] = -1
+
     for semtype in semtypes:
+        simple_types_count = len(semtype.split('^'))
+
+        if simple_types_count != 1:
+            # do not create new terminals for combined semantic classes
+            # instead add this 'string-token' into existing naive one
+            continue
+
         terminal_semtype = semtype.upper()[1:]
-        known_rule_line[terminal_semtype] = 0
-        output.append('%s: "%s"' % (terminal_semtype, semtype))
+        known_rule_line[terminal_semtype] = -1
+        tokens = []
+        for x in semtypes:
+            if semtype in x:
+                tokens.append(x)
+        tokens.sort()
+        output.append('%s: %s' % (terminal_semtype,
+                                  " | ".join(['"%s"' % (s) for s in tokens])))
 
     # for every terminal add epsilon rule
     for left_side in known_rule_line:
@@ -151,13 +172,16 @@ def load_vocabulary():
 
 def load_semtypes_from_vocabulary():
     """ Load all semantic types from the vocabulary """
-    vocabulary = {}
-    with open(VOCABULARY_PATH, "r") as f:
-        for line in f.readlines():
-            (semtype, word) = line.strip().split(":")
-            vocabulary[semtype] = "1"
+    vocabulary = load_vocabulary()
+    semcabulary = dict()
 
-    return vocabulary
+    for word in vocabulary:
+        semtypes = list(vocabulary[word])
+        semtypes.sort()
+        semcabulary["^".join(semtypes)] = 1
+
+    print(semcabulary)
+    return semcabulary
 
 
 def add_semtypes_for_lemma(vocabulary, lemma):
