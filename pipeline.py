@@ -14,6 +14,11 @@ from nltk import sent_tokenize, word_tokenize
 
 
 def preprocessor(grammar):
+    """ Grammar preprocessor
+
+        * allow repeating of the left-side
+        * for each terminal is generated non-terminal eps_*: * | empty
+    """
     output = []
     known_rule_line = {}
 
@@ -87,9 +92,6 @@ GRAMMAR = """
 
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
-
-    eps_quality: QUALITY | empty
-    eps_app: APP | empty
 
     empty:
 
