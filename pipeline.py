@@ -51,11 +51,12 @@ GRAMMAR = """
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
 
-    valency_foo_val: (t_foo_val empty_prep_s eps_app) | (t_foo_val prep_s APP)
+    valency_foo_val: (t_foo_val empty_prep_s empty_app) | (t_foo_val prep_s APP)
     t_foo_val: t_measure? FOO_VAL_S
 
     prep_s: "s"
     empty_prep_s: empty
+    empty_app: empty
 
 """
 sentence_counter = 0
