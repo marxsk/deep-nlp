@@ -1,6 +1,6 @@
 import unittest
 
-from pipeline import preprocessor
+from preprocessor import preprocessor
 
 # @todo: create own assertEqual that will call preprocessor and adds self.permanent_suffix
 
