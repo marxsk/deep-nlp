@@ -33,7 +33,8 @@ RE_EMOTICONS = re.compile(u'['
 ALLOWED_TERMINALS = ["a", ",", "s"]
 
 GRAMMAR = """
-    // eps_* -> TERMINAL alebo epsilon; je generovana automaticky pre kazdy terminal
+    // eps_* -> TERMINAL alebo empty_*; je generovana automaticky pre kazdy terminal
+    // empty_* -> je missing token daného typu
     // *_single -> NETERMINAL bez koordinacii ; koordinacia je vygenerovana automaticky
     // *_req -> vyžaduje naplnenie argumentu, aby sa dalo použiť vo vete
 
@@ -51,13 +52,10 @@ GRAMMAR = """
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
 
-    valency_foo_val: (t_foo_val empty_prep_s empty_app) | (t_foo_val prep_s APP)
+    valency_foo_val: (t_foo_val empty_prep_s empty_app) | (t_foo_val PREP_S APP)
     t_foo_val: t_measure? FOO_VAL_S
 
-    prep_s: "s"
-    empty_prep_s: empty
-    empty_app: empty
-
+    PREP_S: "s"
 """
 sentence_counter = 0
 

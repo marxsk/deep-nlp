@@ -11,14 +11,15 @@ GENERATED_LINE = -1
 
 
 def _add_epsilon_for_each_terminal(rules_by_line):
-    """ Add epsilon non-terminal for each of the terminals: eps_T -> T | empty """
+    """ Add epsilon and empty non-terminal for each of the terminals: eps_T -> T | empty """
     epsilon_terminals = []
 
     for left_side in rules_by_line:
         if left_side.upper() == left_side:
-            eps_terminal_name = 'eps_%s' % left_side.lower()
-            epsilon_terminals.append('%s: %s | empty' %
-                                     (eps_terminal_name, left_side))
+            eps_terminal_name = left_side.lower()
+            epsilon_terminals.append('eps_%s: %s | empty_%s' %
+                                     (eps_terminal_name, left_side, eps_terminal_name))
+            epsilon_terminals.append('empty_%s: empty' % (eps_terminal_name))
 
     return epsilon_terminals
 
