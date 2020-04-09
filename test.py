@@ -1,11 +1,43 @@
 import unittest
 
+from pipeline import add_semtypes_for_lemma
 from preprocessor import preprocessor
 
-# @todo: create own assertEqual that will call preprocessor and adds self.permanent_suffix
+
+class TestAddSemtypeForLemma(unittest.TestCase):
+    def test_naive(self):
+        vocabulary = {
+            'foo': {'#foo'}
+        }
+
+        self.assertEqual(
+            add_semtypes_for_lemma(vocabulary, 'foo'),
+            ['#foo']
+        )
+
+    def test_combined(self):
+        vocabulary = {
+            'foo': {'#foo', '#bar'}
+        }
+
+        self.assertEqual(
+            add_semtypes_for_lemma(vocabulary, 'foo'),
+            ['#bar^#foo']
+        )
+
+    def test_combined_with_floskule(self):
+        vocabulary = {
+            'foo': {'#foo', '#floskule', '#bar'}
+        }
+
+        self.assertEqual(
+            add_semtypes_for_lemma(vocabulary, 'foo'),
+            ['#bar^#foo', '#floskule']
+        )
 
 
 class TestPreprocessor(unittest.TestCase):
+    # @todo: create own assertEqual that will call preprocessor and adds self.permanent_suffix
     permanent_suffix = '\nempty:\n%ignore " "'
 
     def test_comments_are_removed(self):

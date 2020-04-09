@@ -114,12 +114,24 @@ def load_semtypes_from_vocabulary():
 
 
 def add_semtypes_for_lemma(vocabulary, lemma):
-    """ Return string representation of list of all semantic types for given lemma """
-    # @todo: is POS required for correct semtype(?)
+    """ Return string representation of list of all semantic types for given lemma
+
+    @todo: Be aware that we cannot merge '#floskule' because this token will dissapear. This 
+    workaround can be removed when '#floskule' will be part of the grammar directly.
+
+    @todo: is POS required for deciding semtype (?)
+    """
     all_possible_types = []
     for semtype in vocabulary.get(lemma, []):
         all_possible_types.append(semtype)
-    return all_possible_types
+
+    if '#floskule' in all_possible_types:
+        all_possible_types.remove('#floskule')
+        all_possible_types.sort()
+        return ["^".join(all_possible_types), '#floskule']
+    else:
+        all_possible_types.sort()
+        return ["^".join(all_possible_types)]
 
 
 def normalize_sem_token(token):
