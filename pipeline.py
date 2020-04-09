@@ -183,7 +183,8 @@ def parse_document(text, output_directory):
 
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
-        LOGGER.debug("**** Begin of the sentence parsing")
+        LOGGER.debug("**** Begin of the sentence (%d) parsing ",
+                     sentence_counter + 1)
 
         contain_verb = False
         valid_sentence = True
