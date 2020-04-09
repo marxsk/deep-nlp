@@ -1,4 +1,5 @@
 #foo_val_s:spokojenost
+#foo_val_s:spokojený
 #app:apka
 #app:aplikace
 #app:app
@@ -41,6 +42,7 @@
 #floskule:ok
 #floskule:paráda
 #floskule:super
+#floskule:konečně
 #measure:bezva
 #measure:dobře
 #measure:dobrý
@@ -63,7 +65,7 @@
 #measure_req:dokonale
 #measure_req:fakt
 #measure_req:lehce
-#measure_req:maximálně
+#measure:maximálně
 #measure_req:velice
 #measure_req:velmi
 #measure_req:vždy
