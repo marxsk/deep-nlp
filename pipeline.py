@@ -16,7 +16,7 @@ from preprocessor import preprocessor
 
 MAJKA_WLT_PATH = "majka/majka.w-lt"
 VOCABULARY_PATH = "vocabulary.csv"
-LOGLEVEL_DEFAULT = "DEBUG"
+LOGLEVEL_DEFAULT = "INFO"
 
 BLOCKED_LEMMA = ["dobřit"]
 BLOCKED_K1 = ["malá"]
@@ -183,7 +183,7 @@ def parse_document(text, output_directory):
 
     # get sentences
     for sentence in sent_tokenize(text, language='czech'):
-        LOGGER.info("**** Begin of the sentence parsing")
+        LOGGER.debug("**** Begin of the sentence parsing")
 
         contain_verb = False
         valid_sentence = True
@@ -254,7 +254,8 @@ def parse_document(text, output_directory):
 
             # create all combinations that we have to parse
             variant = 1
-            print(cfg_sentence)
+            LOGGER.debug(
+                'Semantic types for every word in the sentence: "%s"', cfg_sentence)
             for c in itertools.product(*cfg_sentence):
                 if c:
                     success = run_earley_parser(c, sentence_counter, variant,
@@ -264,11 +265,10 @@ def parse_document(text, output_directory):
                         success_combinations.append(c)
 
         if not success_combinations:
-            print(">>>")
-            print(sentence)
-            print(success_combinations)
+            LOGGER.warning(
+                'Unable to create any parsing tree for: "%s" %s', sentence, success_combinations)
 
-        LOGGER.info("**** End of the sentence parsing\n\n\n\n\n")
+        LOGGER.debug("**** End of the sentence parsing\n\n\n\n\n")
 
 
 if __name__ == "__main__":

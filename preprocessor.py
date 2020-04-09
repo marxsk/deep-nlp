@@ -7,7 +7,10 @@ it has to be written in the upppercase.
 Also 'semantic type' / 'semantic class' and 'token' are synonyms in this context.
 """
 
+import logging
+
 GENERATED_LINE = -1
+LOGGER = logging.getLogger('deep-nlp-pipeline:preprocessor')
 
 
 def _add_epsilon_for_each_terminal(rules_by_line):
@@ -140,5 +143,7 @@ def preprocessor(grammar, semtypes=None):
     output.append('empty:')
     # ignore white-space as a token; we are working with real-tokens separated by white-space
     output.append('%ignore " "')
+
+    logging.debug('Expanded grammar: %s', '\n'.join(output))
 
     return '\n'.join(output)
