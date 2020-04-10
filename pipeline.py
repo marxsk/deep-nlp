@@ -221,9 +221,11 @@ def parse_document(text, output_directory):
             for analyse in res:
                 analyse['semtype'] = add_semtypes_for_lemma(
                     vocabulary, analyse['lemma'])
-                # @note: ignore all sentences with verb
-                if analyse.get('tags', {}).get('pos', '') == 'verb':
-                    contain_verb = True
+
+            # Check if all analyses of the word are verbs (ignoring for now)
+            contain_verb = all(
+                [analyse.get('tags', {}).get('pos', '') == 'verb'
+                 for analyse in res])
 
             # unpack semtypes from string to multiple elements
             unpack_res = []
