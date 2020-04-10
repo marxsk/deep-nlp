@@ -142,6 +142,13 @@ empty_floskule:
 eps_measure: MEASURE | empty_measure
 empty_measure: """ + self.permanent_suffix)
 
+    def test_generate_empty_eps_for_preps(self):
+        grammar = "prep_nez_any: PREP_NEZ ANY"
+        self.assertEqual(preprocessor(grammar),
+                         """prep_nez_any:(PREP_NEZ ANY)
+empty_prep_nez_any: empty_prep_nez empty_any
+eps_prep_nez_any: empty_prep_nez_any | prep_nez_any""" + self.permanent_suffix)
+
 
 if __name__ == '__main__':
     unittest.main()

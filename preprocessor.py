@@ -27,6 +27,22 @@ def _add_epsilon_for_each_terminal(rules_by_line):
     return epsilon_terminals
 
 
+def _add_epsilon_for_preposition_phrases(rules_by_line):
+    new_rules = []
+
+    for left_side in rules_by_line:
+        if left_side.startswith('prep_') and left_side.count('_') == 2:
+            parts = left_side.split('_')
+            new_rules.append(
+                'empty_{phrase}: empty_prep_{prep} empty_{semtype}'.format(
+                    phrase=left_side, prep=parts[1], semtype=parts[2])
+            )
+            new_rules.append(
+                'eps_{phrase}: empty_{phrase} | {phrase}'.format(phrase=left_side))
+
+    return new_rules
+
+
 def _add_coordination_for_single_suffix(rules_by_line):
     """ Create adjective coordination for every non-terminal with suffix _single """
     coordination_terminals = []
@@ -138,6 +154,7 @@ def preprocessor(grammar, semtypes=None):
     output.extend(_add_terminals_for_naive_semtypes(known_rule_line, semtypes))
     output.extend(_add_epsilon_for_each_terminal(known_rule_line))
     output.extend(_add_coordination_for_single_suffix(known_rule_line))
+    output.extend(_add_epsilon_for_preposition_phrases(known_rule_line))
 
     # add epsilon terminal
     output.append('empty:')

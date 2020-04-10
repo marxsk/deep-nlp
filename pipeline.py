@@ -37,6 +37,7 @@ GRAMMAR = """
     // empty_* -> je missing token daného typu
     // *_single -> NETERMINAL bez koordinacii ; koordinacia je vygenerovana automaticky
     // *_req -> vyžaduje naplnenie argumentu, aby sa dalo použiť vo vete
+    // prep_X_Y -> generuje empty_prep_X_Y a eps_prep_X_Y
 
     sentence: t_app
     sentence: t_attr_complex
@@ -55,13 +56,9 @@ GRAMMAR = """
     t_foo_val: t_measure? FOO_VAL_S
 
     valency_foo_val_s: t_foo_val eps_prep_s_app
-    empty_prep_s_app: empty_prep_s empty_app
-    eps_prep_s_app: empty_prep_s_app | prep_s_app
     prep_s_app: PREP_S APP
 
     valency_foo_val_nez: FOO_VAL_NEZ eps_prep_nez_any
-    empty_prep_nez_any: empty_prep_nez empty_any
-    eps_prep_nez_any: empty_prep_nez_any | prep_nez_any
     prep_nez_any: PREP_NEZ ANY
 
     PREP_S: "s"
