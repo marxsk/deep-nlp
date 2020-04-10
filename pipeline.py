@@ -52,7 +52,12 @@ GRAMMAR = """
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
 
-    valency_foo_val: (t_foo_val empty_prep_s empty_app) | (t_foo_val PREP_S APP)
+    valency_foo_val: t_foo_val eps_prep_s_app
+
+    prep_s_app: PREP_S APP
+    empty_prep_s_app: empty_prep_s empty_app
+    eps_prep_s_app: empty_prep_s_app | prep_s_app
+
     t_foo_val: t_measure? FOO_VAL_S
 
     PREP_S: "s"
