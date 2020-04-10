@@ -39,6 +39,7 @@
 #attr:zapínání
 #floskule:bezva
 #floskule:díky
+#floskule:hlavně
 #floskule:ok
 #floskule:paráda
 #floskule:super
@@ -50,6 +51,8 @@
 #measure:ideální
 #measure:kladně
 #measure:krásně
+#measure:maximálně
+#measure:maximální
 #measure:nadměrný
 #measure:naprostý
 #measure:nejlepší
@@ -65,7 +68,6 @@
 #measure_req:dokonale
 #measure_req:fakt
 #measure_req:lehce
-#measure:maximálně
 #measure_req:velice
 #measure_req:velmi
 #measure_req:vždy
