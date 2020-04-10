@@ -192,6 +192,9 @@ def parse_document(text, output_directory):
         success_combinations = []
 
         sentence_without_emoticons = RE_EMOTICONS.sub('', sentence)
+        # remove also emoticons written as characters
+        sentence_without_emoticons = sentence_without_emoticons.replace(
+            ';)', '')
         sentence_counter += 1
 
         for word in word_tokenize(sentence_without_emoticons):
