@@ -277,7 +277,7 @@ def parse_document(text, output_directory):
 
         if not success_combinations:
             LOGGER.warning(
-                'Unable to create any parsing tree for: "%s" %s', sentence, success_combinations)
+                'Unable to create any parsing tree for: "%s"', sentence)
 
         LOGGER.debug("**** End of the sentence parsing\n\n\n\n\n")
 
