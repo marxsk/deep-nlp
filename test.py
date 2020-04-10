@@ -97,14 +97,14 @@ class TestPreprocessor(unittest.TestCase):
             TERMINAL: "foo"
         """
         self.assertEqual(preprocessor(grammar1).strip(),
-                         'TERMINAL:("foo")\neps_terminal: TERMINAL | empty_terminal\nempty_terminal: empty' + self.permanent_suffix)
+                         'TERMINAL:("foo")\neps_terminal: TERMINAL | empty_terminal\nempty_terminal: ' + self.permanent_suffix)
 
         grammar2 = """
             TERMINAL: "foo"
             TERMINAL: "bar"
         """
         self.assertEqual(preprocessor(grammar2).strip(),
-                         'TERMINAL:("foo")|("bar")\neps_terminal: TERMINAL | empty_terminal\nempty_terminal: empty' + self.permanent_suffix)
+                         'TERMINAL:("foo")|("bar")\neps_terminal: TERMINAL | empty_terminal\nempty_terminal: ' + self.permanent_suffix)
 
     def test_if_coordination_is_added_for_single_suffix(self):
         grammar = """
@@ -116,7 +116,7 @@ class TestPreprocessor(unittest.TestCase):
     def test_generate_simple_terminals(self):
         grammar = ""
         self.assertEqual(preprocessor(
-            grammar, {'#foo': 1}), 'FOO: "#foo"\neps_foo: FOO | empty_foo\nempty_foo: empty' + self.permanent_suffix)
+            grammar, {'#foo': 1}), 'FOO: "#foo"\neps_foo: FOO | empty_foo\nempty_foo: ' + self.permanent_suffix)
 
     def test_generate_merged_terminals(self):
         semtypes = {'#floskule^#measure': 1, '#floskule': 1, '#measure': 1}
@@ -126,9 +126,9 @@ class TestPreprocessor(unittest.TestCase):
                          """FLOSKULE: "#floskule" | "#floskule^#measure"
 MEASURE: "#floskule^#measure" | "#measure"
 eps_floskule: FLOSKULE | empty_floskule
-empty_floskule: empty
+empty_floskule: 
 eps_measure: MEASURE | empty_measure
-empty_measure: empty""" + self.permanent_suffix)
+empty_measure: """ + self.permanent_suffix)
 
     def test_generate_merged_terminals_wo_naives(self):
         semtypes = {'#floskule^#measure': 1}
@@ -138,9 +138,9 @@ empty_measure: empty""" + self.permanent_suffix)
                          """FLOSKULE: "#floskule" | "#floskule^#measure"
 MEASURE: "#floskule^#measure" | "#measure"
 eps_floskule: FLOSKULE | empty_floskule
-empty_floskule: empty
+empty_floskule: 
 eps_measure: MEASURE | empty_measure
-empty_measure: empty""" + self.permanent_suffix)
+empty_measure: """ + self.permanent_suffix)
 
 
 if __name__ == '__main__':
