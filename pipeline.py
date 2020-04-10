@@ -30,7 +30,7 @@ RE_EMOTICONS = re.compile(u'['
                           u'\u2600-\u26FF\u2700-\u27BF]+',
                           re.UNICODE)
 
-ALLOWED_TERMINALS = ["a", ",", "s"]
+ALLOWED_TERMINALS = ["a", ",", "s", "než"]
 
 GRAMMAR = """
     // eps_* -> TERMINAL alebo empty_*; je generovana automaticky pre kazdy terminal
@@ -40,7 +40,7 @@ GRAMMAR = """
 
     sentence: t_app
     sentence: t_attr_complex
-    sentence: valency_foo_val
+    sentence: valency_foo_val_s | valency_foo_val_nez
 
     t_app: (t_quality eps_app) | (APP t_quality)
 
@@ -52,15 +52,20 @@ GRAMMAR = """
     t_measure_req: (MEASURE_REQ)
     t_measure: (MEASURE) | (MEASURE MEASURE) | (MEASURE_REQ MEASURE)
 
-    valency_foo_val: t_foo_val eps_prep_s_app
-
-    prep_s_app: PREP_S APP
-    empty_prep_s_app: empty_prep_s empty_app
-    eps_prep_s_app: empty_prep_s_app | prep_s_app
-
     t_foo_val: t_measure? FOO_VAL_S
 
+    valency_foo_val_s: t_foo_val eps_prep_s_app
+    empty_prep_s_app: empty_prep_s empty_app
+    eps_prep_s_app: empty_prep_s_app | prep_s_app
+    prep_s_app: PREP_S APP
+
+    valency_foo_val_nez: FOO_VAL_NEZ eps_prep_nez_any
+    empty_prep_nez_any: empty_prep_nez empty_any
+    eps_prep_nez_any: empty_prep_nez_any | prep_nez_any
+    prep_nez_any: PREP_NEZ ANY
+
     PREP_S: "s"
+    PREP_NEZ: "než"
 """
 sentence_counter = 0
 
