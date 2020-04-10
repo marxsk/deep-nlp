@@ -22,7 +22,7 @@ def _add_epsilon_for_each_terminal(rules_by_line):
             eps_terminal_name = left_side.lower()
             epsilon_terminals.append('eps_%s: %s | empty_%s' %
                                      (eps_terminal_name, left_side, eps_terminal_name))
-            epsilon_terminals.append('empty_%s: empty' % (eps_terminal_name))
+            epsilon_terminals.append('empty_%s: ' % (eps_terminal_name))
 
     return epsilon_terminals
 
