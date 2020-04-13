@@ -149,6 +149,15 @@ empty_measure: """ + self.permanent_suffix)
 empty_prep_nez_any: empty_prep_nez empty_any
 eps_prep_nez_any: empty_prep_nez_any | prep_nez_any""" + self.permanent_suffix)
 
+    def test_parent_hierarchy(self):
+        semtypes = {"#foo": 1}
+        grammar = "FOO: BAR"
+        self.assertEqual(preprocessor(grammar, semtypes),
+                         """FOO: "#foo" | (BAR)
+eps_foo: FOO | empty_foo
+empty_foo: """
+                         + self.permanent_suffix)
+
 
 if __name__ == '__main__':
     unittest.main()
