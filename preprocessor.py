@@ -69,7 +69,7 @@ def _mutadd_naive_semtypes_from_combined(semantic_types):
                 semantic_types[naive_semtype] = GENERATED_LINE
 
 
-def _add_terminals_for_naive_semtypes(rules_by_line, semantic_types):
+def _update_terminals_for_naive_semtypes(rules_by_line, semantic_types, grammar):
     """ Add terminals for each semantic types/token
 
     Only naive semantic types are added but they have to accept combined ones. This is the
@@ -99,14 +99,32 @@ def _add_terminals_for_naive_semtypes(rules_by_line, semantic_types):
             if semtype in semantic_type:
                 tokens.append(semantic_type)
         tokens.sort()
-        output.append('%s: %s' % (terminal_semtype,
-                                  " | ".join(['"%s"' % (s) for s in tokens])))
+        str_tokens = ['"%s"' % (s) for s in tokens]
+
+        # Add also pre-existing rules that are used to map hierarchy of semantic types.
+        # It is enough if we add direct parents to the grammar as rest can be infered
+        str_parents = []
+        for rule in rules_by_line:
+            if rule == terminal_semtype:
+                found_lines = []
+                for line in grammar:
+                    (left, right) = line.split(':', 1)
+                    if left == terminal_semtype:
+                        str_parents.append(right)
+                        found_lines.append(line)
+
+                # Remove lines that are merged into the final one
+                for line in found_lines:
+                    grammar.remove(line)
+
+        output.append('%s: %s' %
+                      (terminal_semtype, " | ".join(str_tokens + str_parents)))
 
     return output
 
 
 def _prepare_grammar(grammar):
-    """ Load grammar and copy lines that will stay untouched
+    """ Load grammar. Copy lines that will stay untouched and merge those with same left side
 
         :return: returns part of the grammar that is untouched and rules (with line information)
     """
@@ -151,7 +169,8 @@ def preprocessor(grammar, semtypes=None):
     # @note: naive semtype is '#foo'; combined is '#foo^#bar'
     _mutadd_naive_semtypes_from_combined(semtypes)
 
-    output.extend(_add_terminals_for_naive_semtypes(known_rule_line, semtypes))
+    output.extend(_update_terminals_for_naive_semtypes(
+        known_rule_line, semtypes, output))
     output.extend(_add_epsilon_for_each_terminal(known_rule_line))
     output.extend(_add_coordination_for_single_suffix(known_rule_line))
     output.extend(_add_epsilon_for_preposition_phrases(known_rule_line))
