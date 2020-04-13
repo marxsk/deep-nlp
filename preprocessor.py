@@ -106,16 +106,16 @@ def _update_terminals_for_naive_semtypes(rules_by_line, semantic_types, grammar)
         str_parents = []
         for rule in rules_by_line:
             if rule == terminal_semtype:
-                found_lines = []
+                found_line = None
                 for line in grammar:
                     (left, right) = line.split(':', 1)
                     if left == terminal_semtype:
                         str_parents.append(right)
-                        found_lines.append(line)
+                        found_line = line
 
-                # Remove lines that are merged into the final one
-                for line in found_lines:
-                    grammar.remove(line)
+                # Remove line (merged from multiple if needed) into the final one
+                if found_line:
+                    grammar.remove(found_line)
 
         output.append('%s: %s' %
                       (terminal_semtype, " | ".join(str_tokens + str_parents)))
