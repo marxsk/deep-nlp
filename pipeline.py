@@ -8,7 +8,8 @@ import os
 import re
 import sys
 
-from lark import Lark, tree
+from lark import Lark, Token, Tree
+from lark import tree as larktree
 from majka import Majka
 from nltk import sent_tokenize, word_tokenize
 
@@ -66,7 +67,20 @@ GRAMMAR = """
 sentence_counter = 0
 
 
-def run_earley_parser(sentence, counter, variant, label, directory):
+def get_tokens_from_tree(tree):
+    output = []
+    if isinstance(tree, Token):
+        output.append(tree.value)
+    elif isinstance(tree, Tree) and not tree.children and tree.data.startswith('empty_'):
+        output.append(tree.data)
+    elif isinstance(tree, Tree):
+        for t in tree.children:
+            output.extend(get_tokens_from_tree(t))
+
+    return output
+
+
+def run_earley_parser(sentence, word_sentence, counter, variant, label, directory):
     if '#unknown' in sentence:
         # Unknown token cannot be resolved into valid tree
         return None
@@ -77,7 +91,20 @@ def run_earley_parser(sentence, counter, variant, label, directory):
 #        print(sentence)
 #        print(parse_tree.pretty())
 
-        tree.pydot__tree_to_png(
+        # Map empty tokens to the sentence
+        # @note Currently, only single lemma enters sentence, so situation is quite simple
+        expanded_sentence = []
+        word_counter = 0
+        for t in get_tokens_from_tree(parse_tree):
+            word = ''
+            if t.startswith('#'):
+                word = word_sentence[word_counter]
+                word_counter += 1
+            expanded_sentence.append((word, t))
+
+        print(expanded_sentence)
+
+        larktree.pydot__tree_to_png(
             parse_tree, directory + '/sentence-{:03d}-{:02d}.png'.format(counter, variant), label=label + "\n" + " ".join(sentence))
         with open(directory + "/sentence-{:03d}-{:02d}.pretty".format(counter, variant), "w") as f:
             f.write(parse_tree.pretty())
@@ -276,12 +303,14 @@ def parse_document(text, output_directory):
                 continue
 
             # create all combinations that we have to parse
+            words = word_tokenize(sentence_without_emoticons)
+
             variant = 1
             LOGGER.debug(
                 'Semantic types for every word in the sentence: "%s"', cfg_sentence)
             for c in itertools.product(*cfg_sentence):
                 if c:
-                    success = run_earley_parser(c, sentence_counter, variant,
+                    success = run_earley_parser(c, words, sentence_counter, variant,
                                                 sentence_without_emoticons, output_directory)
                     if success:
                         variant += 1
