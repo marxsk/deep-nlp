@@ -58,8 +58,10 @@ GRAMMAR = """
     valency_foo_val_s: t_foo_val eps_prep_s_app
     prep_s_app: PREP_S APP
 
-    valency_foo_val_nez: FOO_VAL_NEZ eps_prep_nez_any
+    valency_foo_val_nez: D2MEASURE eps_prep_nez_any
     prep_nez_any: PREP_NEZ ANY
+
+    MEASURE: D2MEASURE
 
     PREP_S: "s"
     PREP_NEZ: "než"
@@ -110,6 +112,9 @@ def load_semtypes_from_vocabulary():
     vocabulary = load_vocabulary()
     semcabulary = dict()
 
+    # @note: this is ugly and hacky (and break tests)
+    semcabulary['#d2measure'] = 1
+
     for word in vocabulary:
         semtypes = list(vocabulary[word])
         semtypes.sort()
@@ -118,17 +123,23 @@ def load_semtypes_from_vocabulary():
     return semcabulary
 
 
-def add_semtypes_for_lemma(vocabulary, lemma):
+def add_semtypes_for_lemma(vocabulary, lemma, morph_analyse):
     """ Return string representation of list of all semantic types for given lemma
 
     @todo: Be aware that we cannot merge '#floskule' because this token will dissapear. This 
     workaround can be removed when '#floskule' will be part of the grammar directly.
-
-    @todo: is POS required for deciding semtype (?)
     """
     all_possible_types = []
+    is_measure = False
     for semtype in vocabulary.get(lemma, []):
         all_possible_types.append(semtype)
+        if semtype == '#measure':
+            is_measure = True
+
+    # @note hacky solution as it is only required for single case yet
+    # @note be aware that this info is NOT part of the vocabulary
+    if morph_analyse.get('degree', 1) == 2 and is_measure:
+        all_possible_types = ['#d2measure']
 
     if '#floskule' in all_possible_types:
         all_possible_types.remove('#floskule')
@@ -222,7 +233,7 @@ def parse_document(text, output_directory):
             res = local_blocklist(res)
             for analyse in res:
                 analyse['semtype'] = add_semtypes_for_lemma(
-                    vocabulary, analyse['lemma'])
+                    vocabulary, analyse['lemma'], analyse['tags'])
 
             # Check if all analyses of the word are verbs (ignoring for now)
             contain_verb = all(

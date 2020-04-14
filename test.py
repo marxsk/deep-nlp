@@ -11,7 +11,7 @@ class TestAddSemtypeForLemma(unittest.TestCase):
         }
 
         self.assertEqual(
-            add_semtypes_for_lemma(vocabulary, 'foo'),
+            add_semtypes_for_lemma(vocabulary, 'foo', {}),
             ['#foo']
         )
 
@@ -21,7 +21,7 @@ class TestAddSemtypeForLemma(unittest.TestCase):
         }
 
         self.assertEqual(
-            add_semtypes_for_lemma(vocabulary, 'foo'),
+            add_semtypes_for_lemma(vocabulary, 'foo', {}),
             ['#bar^#foo']
         )
 
@@ -31,7 +31,7 @@ class TestAddSemtypeForLemma(unittest.TestCase):
         }
 
         self.assertEqual(
-            add_semtypes_for_lemma(vocabulary, 'foo'),
+            add_semtypes_for_lemma(vocabulary, 'foo', {}),
             ['#bar^#foo', '#floskule']
         )
 
