@@ -111,7 +111,7 @@ class TestPreprocessor(unittest.TestCase):
         t_attr_single: t_quality* ATTR
         """
         self.assertEqual(preprocessor(
-            grammar), "t_attr_single:(t_quality* ATTR)\nt_attr: (t_attr_single) | ((t_attr_single \",\")+ t_attr_single) | ((t_attr_single \",\")* t_attr_single \"a\" t_attr_single)" + self.permanent_suffix)
+            grammar), "t_attr_single:(t_quality* ATTR)\nt_attr: (t_attr_single) | ((t_attr_single \",\")+ t_attr_single) | ((t_attr_single \",\")* t_attr_single COORD_A t_attr_single)" + self.permanent_suffix)
 
     def test_generate_simple_terminals(self):
         grammar = ""

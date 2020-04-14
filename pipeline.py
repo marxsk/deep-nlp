@@ -30,7 +30,7 @@ RE_EMOTICONS = re.compile(u'['
                           u'\u2600-\u26FF\u2700-\u27BF]+',
                           re.UNICODE)
 
-ALLOWED_TERMINALS = ["a", ",", "s", "než"]
+ALLOWED_TERMINALS = [","]
 
 GRAMMAR = """
     // eps_* -> TERMINAL alebo empty_*; je generovana automaticky pre kazdy terminal
@@ -62,9 +62,6 @@ GRAMMAR = """
     prep_nez_any: PREP_NEZ ANY
 
     MEASURE: D2MEASURE
-
-    PREP_S: "s"
-    PREP_NEZ: "než"
 """
 sentence_counter = 0
 

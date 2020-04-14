@@ -51,7 +51,7 @@ def _add_coordination_for_single_suffix(rules_by_line):
         if left_side.endswith('_single'):
             coordination_terminals.append(
                 """{coord}: ({single}) | (({single} ",")+ {single}) |"""
-                """ (({single} ",")* {single} "a" {single})"""
+                """ (({single} ",")* {single} COORD_A {single})"""
                 .format(single=left_side, coord=left_side[:-7])
             )
 
