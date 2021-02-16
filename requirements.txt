@@ -1,0 +1,4 @@
+lark-parser
+nltk===3.4.5
+majka
+pydot
