@@ -43,14 +43,16 @@ GRAMMAR = """
     sentence: t_zelenina
     sentence: t_masoprodukt
     sentence: t_priloha
+    // sentence: t_testoviny
+    sentence: t_polevka
 
     t_priloha: (eps_zprac PRILOHA)
     t_zelenina: (eps_zprac ZELENINA)
+    // t_omacka: ((t_zeleninovy|t_spec) OMACKA)
     t_masoprodukt: (eps_zprac eps_maso (MASOPRODUKT|MASODIL))
-	t_masoprodukt: (eps_zprac eps_maso (MASOPRODUKT|MASODIL) ((PREP_S|","|COORD_A) (t_priloha|t_zelenina))*)
-	// t_masoprodukt: (eps_zprac eps_maso (MASOPRODUKT|MASODIL) (","|COORD_A) (t_priloha)) ((","|COORD_A|PREP_S) ZELENINA)
-	// t_masoprodukt: (eps_zprac eps_maso (MASOPRODUKT|MASODIL) PREP_S (t_priloha))
-    
+	t_masoprodukt: (eps_zprac eps_maso (MASOPRODUKT|MASODIL) ((PREP_S|","|COORD_A) (t_zelenina|t_priloha))*)
+	t_testoviny: (TESTOVINY)
+	t_polevka: (((eps_zeleninovy|eps_maso) POLEVKA) ((PREP_S|","|COORD_A) (t_zelenina|t_priloha|t_testoviny))*)
 """
 sentence_counter = 0
 
