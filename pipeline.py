@@ -201,7 +201,7 @@ def local_morph(word):
 
         "apka": [{'lemma': 'aplikace', 'tags': {'pos': 'noun'}}]
     }
-    return known_words[word] if word in known_words else []
+    return known_words[word.lower()] if word.lower() in known_words else []
 
 
 def local_blocklist(analyses):
