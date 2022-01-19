@@ -73,6 +73,9 @@ def get_tokens_from_tree(tree):
         output.append(tree.value)
     elif isinstance(tree, Tree) and not tree.children and tree.data.startswith('empty_'):
         output.append(tree.data)
+    elif isinstance(tree, Tree) and tree.data == '_ambig':
+        # For ambiguous trees takes only first branch into account
+        output.extend(get_tokens_from_tree(tree.children[0]))
     elif isinstance(tree, Tree):
         for t in tree.children:
             output.extend(get_tokens_from_tree(t))
